@@ -13,9 +13,9 @@ namespace BankApp.API.Data
         {
         }
 
-        DbSet<Customer> Customers { get; set; }
-        DbSet<Account> Accounts { get; set; }
-        DbSet<Address> Addresses { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
