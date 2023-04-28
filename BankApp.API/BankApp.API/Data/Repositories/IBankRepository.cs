@@ -2,7 +2,7 @@
 
 public interface IBankRepository<T>
 {
-    bool IsNull { get; }
+    bool IsEmpty { get; }
     Task<IEnumerable<T>> GetAllAsync();
     Task<T?> FindAsync(int id);
     void Add(T entity);

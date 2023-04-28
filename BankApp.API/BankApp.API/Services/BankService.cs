@@ -14,7 +14,7 @@ public class BankService<T> : IBankService<T> where T : class
 
     public async Task<bool> CreateAsync(T entity)
     {
-        if (_repository.IsNull || entity == null)
+        if (_repository.IsEmpty || entity == null)
         {
             return false;
         }
@@ -28,7 +28,7 @@ public class BankService<T> : IBankService<T> where T : class
 
     public async Task<bool> DeleteAsync(int id)
     {
-        if (_repository.IsNull)
+        if (_repository.IsEmpty)
         {
             return false;
         }
@@ -50,7 +50,7 @@ public class BankService<T> : IBankService<T> where T : class
     public async Task<IEnumerable<T>?> GetAllAsync()
     {
 
-        if (_repository.IsNull)
+        if (_repository.IsEmpty)
         {
             return null;
         }
@@ -60,7 +60,7 @@ public class BankService<T> : IBankService<T> where T : class
 
     public async Task<T?> GetAsync(int id)
     {
-        if (_repository.IsNull)
+        if (_repository.IsEmpty)
         {
             return null;
         }
@@ -78,12 +78,18 @@ public class BankService<T> : IBankService<T> where T : class
 
     public async Task SaveAsync()
     {
-        _repository.SaveAsync();
+        await _repository.SaveAsync();
     }
 
     public async Task<bool> UpdateAsync(int id, T entity)
     {
+        if (entity == null)
+        {
+            return false;
+        }
+
         _repository.Update(entity);
+
         try
         {
             await _repository.SaveAsync();

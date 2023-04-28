@@ -13,7 +13,7 @@ public class BankRepository<T> : IBankRepository<T> where T : class
         _context = context;
     }
 
-    public bool IsNull => _dbSet == null;
+    public bool IsEmpty => _dbSet == null;
 
     public void Add(T entity)
     {
