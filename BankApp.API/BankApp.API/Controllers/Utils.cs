@@ -54,7 +54,6 @@ namespace BankApp.API.Controllers
             TransactionType = transaction.TransactionType,
             Amount = transaction.Amount,
             DateCreated = transaction.DateCreated,
-            //AccountId = transaction.Account.Id
         };
     }
 }
