@@ -55,5 +55,29 @@ namespace BankApp.API.Controllers
             Amount = transaction.Amount,
             DateCreated = transaction.DateCreated,
         };
+
+        public static GetBranchDTO GetBranchToDTO(Branch branch)
+        {
+            var branchDTO = new GetBranchDTO()
+            {
+                Id = branch.Id,
+                Name = branch.Name,
+                Address = branch.Address,
+                CustomerIds = new List<int>(),
+                AccountIds = new List<int>()
+            };
+
+            foreach(var customer in branch.Customers)
+            {
+                branchDTO.CustomerIds.Add(customer.Id);
+            }
+
+            foreach(var account in branch.Accounts)
+            {
+                branchDTO.AccountIds.Add(account.Id);
+            }
+
+            return branchDTO;
+        }
     }
 }

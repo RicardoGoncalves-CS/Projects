@@ -123,12 +123,22 @@ namespace BankApp.API.Controllers
                 return Problem($"Customer with Id {accountDTO.CustomerId} doesn't exist.");
             }
 
+            var branch = await _context.Branches.FindAsync(accountDTO.BranchId);
+
+            if (customer == null)
+            {
+                return Problem($"Branch with Id {accountDTO.BranchId} doesn't exist.");
+            }
+
             Account account = new Account
             {
+                AccountNo = accountDTO.AccountNo,
                 Balance = accountDTO.Balance,
                 OpenDate = accountDTO.OpenDate,
                 IsActive = accountDTO.IsActive,
-                Customer = customer
+                Customer = customer,
+                Branch = branch,
+                Transactions = new List<Transaction>()
             };
 
             _context.Accounts.Add(account);
