@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BankApp.API.Data;
 using BankApp.API.Models;
+using BankApp.API.Models.DTOs;
 
 namespace BankApp.API.Controllers
 {
@@ -23,20 +24,32 @@ namespace BankApp.API.Controllers
 
         // GET: api/Accounts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
+        public async Task<ActionResult<IEnumerable<GetAccountDTO>>> GetAccounts()
         {
-          if (_context.Accounts == null)
-          {
-              return NotFound();
-          }
-            return await _context.Accounts
+            if (_context.Accounts == null)
+            {
+                return NotFound();
+            }
+
+            var accounts = await _context.Accounts
                 .Include(a => a.Customer)
+                .Include(a => a.Branch)
+                .Include(a => a.Transactions)
                 .ToListAsync();
+
+            var accountsDTO = new List<GetAccountDTO>();
+
+            foreach (var account in accounts)
+            {
+                accountsDTO.Add(Utils.GetAccountToDTO(account));
+            }
+
+            return accountsDTO;
         }
 
         // GET: api/Accounts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(int id)
+        public async Task<ActionResult<GetAccountDTO>> GetAccount(int id)
         {
             if (_context.Accounts == null)
             {
@@ -45,7 +58,9 @@ namespace BankApp.API.Controllers
 
             var account = await _context.Accounts
                 .Where(a => a.Id == id)
-                .Include(a => a.Customer)
+                .Include(a => a.Customer.Id)
+                .Include(a => a.Branch.Id)
+                .Include(a => a.Transactions)
                 .FirstOrDefaultAsync();
 
             if (account == null)
@@ -53,18 +68,27 @@ namespace BankApp.API.Controllers
                 return NotFound();
             }
 
-            return account;
+            return Utils.GetAccountToDTO(account);
         }
 
         // PUT: api/Accounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount(int id, Account account)
+        public async Task<IActionResult> PutAccount(int id, AccountDTO accountDTO)
         {
-            if (id != account.Id)
+            var account = await _context.Accounts.FindAsync(id);
+            if(account == null)
+            {
+                return NotFound($"Account with Id {accountDTO.Id} doesn't exist.");
+            }
+
+            if (id != accountDTO.Id)
             {
                 return BadRequest();
             }
+
+            account.Balance = accountDTO.Balance;
+            account.IsActive = accountDTO.IsActive;
 
             _context.Entry(account).State = EntityState.Modified;
 
@@ -90,12 +114,28 @@ namespace BankApp.API.Controllers
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Account>> PostAccount(Account account)
+        public async Task<ActionResult<Account>> PostAccount(AccountDTO accountDTO)
         {
-          if (_context.Accounts == null)
-          {
-              return Problem("Entity set 'DataContext.Accounts'  is null.");
-          }
+            if (_context.Accounts == null)
+            {
+                return Problem("Entity set 'DataContext.Accounts'  is null.");
+            }
+
+            var customer = await _context.Customers.FindAsync(accountDTO.CustomerId);
+
+            if(customer == null)
+            {
+                return Problem($"Customer with Id {accountDTO.CustomerId} doesn't exist.");
+            }
+
+            Account account = new Account
+            {
+                Balance = accountDTO.Balance,
+                OpenDate = accountDTO.OpenDate,
+                IsActive = accountDTO.IsActive,
+                Customer = customer
+            };
+
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 

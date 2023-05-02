@@ -16,5 +16,8 @@ namespace BankApp.API.Data
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Branch> Branches { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
     }
 }

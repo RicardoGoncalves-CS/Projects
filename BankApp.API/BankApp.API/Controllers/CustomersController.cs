@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BankApp.API.Data;
 using BankApp.API.Models;
+using BankApp.API.Models.DTOs;
 
 namespace BankApp.API.Controllers
 {
@@ -23,28 +19,41 @@ namespace BankApp.API.Controllers
 
         // GET: api/Customers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
-          if (_context.Customers == null)
-          {
-              return NotFound();
-          }
-            return await _context.Customers
+            if (_context.Customers == null)
+            {
+                return NotFound();
+            }
+
+            var customers = await _context.Customers
                 .Include(c => c.Accounts)
+                .Include(c => c.Address)
                 .ToListAsync();
+
+            var customersDTO = new List<CustomerDTO>();
+
+            foreach(var customer in customers)
+            {
+                customersDTO.Add(Utils.GetCustomerToDTO(customer));
+            }
+
+            return customersDTO;
         }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
+        public async Task<ActionResult<CustomerDTO>> GetCustomer(int id)
         {
-          if (_context.Customers == null)
-          {
-              return NotFound();
-          }
+            if (_context.Customers == null)
+            {
+                return NotFound();
+            }
+
             var customer = await _context.Customers
                 .Where(c => c.Id == id)
                 .Include(c => c.Accounts)
+                .Include(c => c.Address)
                 .FirstOrDefaultAsync();
 
             if (customer == null)
@@ -52,7 +61,7 @@ namespace BankApp.API.Controllers
                 return NotFound();
             }
 
-            return customer;
+            return Utils.GetCustomerToDTO(customer);
         }
 
         // PUT: api/Customers/5
@@ -89,16 +98,40 @@ namespace BankApp.API.Controllers
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public async Task<ActionResult<Customer>> PostCustomer(CustomerDTO customerDTO)
         {
-          if (_context.Customers == null)
-          {
-              return Problem("Entity set 'DataContext.Customers'  is null.");
-          }
+            if (_context.Customers == null)
+            {
+                return Problem("Entity set 'DataContext.Customers'  is null.");
+            }
+
+            var address = await _context.Addresses.FindAsync(customerDTO.AddressId);
+            if (address == null)
+            {
+                return Problem($"Address with Id {customerDTO.AddressId} doesn't exist.");
+            }
+
+            var accounts = await _context.Accounts
+                .Where(a => a.Customer.Id == customerDTO.Id)
+                .Include(a => a.Customer)
+                .Include(a => a.Branch)
+                .ToListAsync();
+
+            Customer customer = new Customer
+            {
+                FirstName = customerDTO.FirstName,
+                LastName = customerDTO.LastName,
+                Phone = customerDTO.Phone,
+                DOB = customerDTO.DOB,
+                IsActive = customerDTO.IsActive,
+                Address = address
+            };
+
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+            return Ok("Customer successfully created");
+            //return CreatedAtAction("GetCustomer", new { id = customer.Id }, customerDTO);
         }
 
         // DELETE: api/Customers/5
