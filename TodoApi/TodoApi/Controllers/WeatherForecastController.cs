@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace BankApp.API.Controllers
+namespace TodoApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

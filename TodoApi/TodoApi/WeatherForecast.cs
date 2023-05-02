@@ -1,4 +1,4 @@
-namespace BankApp.API
+namespace TodoApi
 {
     public class WeatherForecast
     {
