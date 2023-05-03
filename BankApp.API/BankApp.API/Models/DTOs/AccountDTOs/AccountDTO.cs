@@ -1,4 +1,4 @@
-﻿namespace BankApp.API.Models.DTOs
+﻿namespace BankApp.API.Models.DTOs.AccountDTOs
 {
     public class AccountDTO
     {

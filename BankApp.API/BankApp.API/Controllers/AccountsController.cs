@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using BankApp.API.Data;
 using BankApp.API.Models;
-using BankApp.API.Models.DTOs;
+using BankApp.API.Models.DTOs.AccountDTOs;
 
 namespace BankApp.API.Controllers
 {
@@ -109,7 +109,8 @@ namespace BankApp.API.Controllers
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Account>> PostAccount(AccountDTO accountDTO)
+        public async Task<ActionResult<Account>> PostAccount(
+            [Bind("AccountNo", "Balance", "OpenDate", "IsActive", "CustomerId", "BranchId")]AccountDTO accountDTO)
         {
             if (_context.Accounts == null)
             {
@@ -138,7 +139,7 @@ namespace BankApp.API.Controllers
                 IsActive = accountDTO.IsActive,
                 Customer = customer,
                 Branch = branch,
-                Transactions = new List<Transaction>()
+                //Transactions = new List<Transaction>()
             };
 
             _context.Accounts.Add(account);

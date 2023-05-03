@@ -1,5 +1,6 @@
 ﻿using BankApp.API.Models.DTOs;
 using BankApp.API.Models;
+using BankApp.API.Models.DTOs.AccountDTOs;
 
 namespace BankApp.API.Controllers
 {
