@@ -1,7 +1,6 @@
-using BankAPI.Data;
-using BankAPI.Data.Repository;
-using BankAPI.Models;
-using BankAPI.Services;
+using Bank.API.Data;
+using Bank.API.Data.Repository;
+using Bank.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,12 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped(typeof(IBankRepository<>), typeof(BankRepository<>));
-
-builder.Services.AddScoped(typeof(IBankService<>), typeof(BankService<>));
-
-builder.Services.AddScoped<IBankService<Branch>, BranchService>();
-builder.Services.AddScoped<IBankRepository<Branch>, BranchRepository>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchService, BranchService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
