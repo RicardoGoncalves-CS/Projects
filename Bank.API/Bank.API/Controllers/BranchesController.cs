@@ -41,9 +41,9 @@ namespace Bank.API.Controllers
 
         // GET: api/Branches/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Branch>> GetBranch(int id)
+        public async Task<ActionResult<GetBranchDTO>> GetBranch(int id)
         {
-            var branch = await _branchRepository.GetByIdAsync(id);
+            var branch = await _branchService.GetBranchById(id);
             if (branch == null)
             {
                 return NotFound();

@@ -15,6 +15,28 @@ namespace Bank.API.Services
             _addressRepository = addressRepository;
         }
 
+        public async Task<GetBranchDTO> GetBranchById(int id)
+        {
+            var branch = await _branchRepository.GetByIdAsync(id);
+
+            if(branch == null)
+            {
+                return null;
+            }
+
+            var customerIds = branch.Customers?.Select(c => c.Id);
+
+            var branchDTO = new GetBranchDTO
+            {
+                Id = branch.Id,
+                BranchName = branch.BranchName,
+                Address = branch.Address,
+                CustomerIds = customerIds
+            };
+
+            return branchDTO;
+        }
+
         public async Task<Branch> CreateBranchAsync(CreateBranchDTO branchDTO)
         {
             var address = await _addressRepository.GetByIdAsync(branchDTO.AddressId);
