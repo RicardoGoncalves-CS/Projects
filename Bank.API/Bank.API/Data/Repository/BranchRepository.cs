@@ -25,12 +25,18 @@ namespace Bank.API.Data.Repository
 
         public async Task<IEnumerable<Branch>> GetAllAsync()
         {
-            return await _context.Branches.Include(b => b.Address).ToListAsync();
+            return await _context.Branches
+                .Include(b => b.Address)
+                .Include(b => b.Customers)
+                .ToListAsync();
         }
 
         public async Task<Branch> GetByIdAsync(int id)
         {
-            return await _context.Branches.Include(b => b.Address).FirstOrDefaultAsync(b => b.Id == id);
+            return await _context.Branches
+                .Include(b => b.Address)
+                .Include(b => b.Customers)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task RemoveAsync(Branch entity)
@@ -42,6 +48,11 @@ namespace Bank.API.Data.Repository
         public async Task UpdateAsync(Branch entity)
         {
             _context.Branches.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveAsync()
+        {
             await _context.SaveChangesAsync();
         }
     }

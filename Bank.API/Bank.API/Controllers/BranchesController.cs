@@ -19,16 +19,18 @@ namespace Bank.API.Controllers
     {
         private readonly IBranchRepository _branchRepository;
         private readonly IBranchService _branchService;
+        private readonly ICustomerRepository _customerRepository;
 
-        public BranchesController(IBranchRepository branchRepository, IBranchService branchService)
+        public BranchesController(IBranchRepository branchRepository, IBranchService branchService, ICustomerRepository customerRepository)
         {
             _branchRepository = branchRepository;
             _branchService = branchService;
+            _customerRepository = customerRepository;
         }
 
         // GET: api/Branches
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Branch>>> GetBranches()
+        public async Task<ActionResult<IEnumerable<GetBranchDTO>>> GetBranches()
         {
             var branches = await _branchRepository.GetAllAsync();
             if (branches == null)
@@ -36,7 +38,22 @@ namespace Bank.API.Controllers
                 return NotFound();
             }
 
-            return Ok(branches);
+            var branchDTOs = new List<GetBranchDTO>();
+
+            foreach(var branch in branches)
+            {
+                var branchDTO = new GetBranchDTO
+                {
+                    Id = branch.Id,
+                    BranchName = branch.BranchName,
+                    Address = branch.Address,
+                    CustomerIds = branch.Customers?.Select(c => c.Id).ToList()
+                };
+
+                branchDTOs.Add(branchDTO);
+            }
+
+            return Ok(branchDTOs);
         }
 
         // GET: api/Branches/5
@@ -49,7 +66,15 @@ namespace Bank.API.Controllers
                 return NotFound();
             }
 
-            return Ok(branch);
+            var branchDTO = new GetBranchDTO
+            {
+                Id = branch.Id,
+                BranchName = branch.BranchName,
+                Address = branch.Address,
+                CustomerIds = branch.CustomerIds
+            };
+
+            return Ok(branchDTO);
         }
 
         // PUT: api/Branches/5
@@ -91,8 +116,17 @@ namespace Bank.API.Controllers
             }
 
             var branch = await _branchRepository.GetByIdAsync(id);
-            // Need Customer repository / service
-            //branch.Customers.Add()
+            var customer = await _customerRepository.GetByIdAsync(addCustomerDTO.CustomerId);
+
+            if(branch.Customers == null)
+            {
+                branch.Customers = new List<Customer>();
+            }
+
+            branch.Customers.Add(customer);
+            await _branchRepository.SaveAsync();
+
+            return Ok();
         }
 
         // POST: api/Branches

@@ -10,5 +10,6 @@ namespace Bank.API.Data.Repository
         Task RemoveAsync(Branch entity);
         Task UpdateAsync(Branch entity);
         Task<bool> ExistsAsync(int id);
+        Task SaveAsync();
     }
 }
