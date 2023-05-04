@@ -18,9 +18,9 @@ namespace Bank.API.Controllers
     public class AddressesController : ControllerBase
     {
         private readonly IBankRepository<Address> _addressRepository;
-        private readonly IAddressService _addressService;
+        private readonly IBankService<CreateAddressDTO, Address, Address> _addressService;
 
-        public AddressesController(IBankRepository<Address> addressRepository, IAddressService addressService)
+        public AddressesController(IBankRepository<Address> addressRepository, IBankService<CreateAddressDTO, Address, Address> addressService)
         {
             _addressRepository = addressRepository;
             _addressService = addressService;
@@ -86,9 +86,14 @@ namespace Bank.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(CreateAddressDTO addressDTO)
         {
-            var address = await _addressService.CreateAddressAsync(addressDTO);
+            bool created = await _addressService.CreateAsync(addressDTO);
+            //var address = await _addressService.CreateAsync(addressDTO);
+            if (created == false)
+            {
+                return Problem("There was a problem creating Address.");
+            }
 
-            return CreatedAtAction("GetAddress", new { id = address.Id }, address);
+            return Ok("Address created successfully.");
         }
 
         // DELETE: api/Addresses/5
