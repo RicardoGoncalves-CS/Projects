@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Bank.API.Data;
 using Bank.API.Models;
 using Bank.API.Models.DTOs.AddressDTOs;
 using Bank.API.Data.Repository;
@@ -30,7 +24,7 @@ namespace Bank.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Address>>> GetAddresses()
         {
-            var addresses = await _addressRepository.GetAllAsync();
+            var addresses = await _addressService.GetAllAsync();
             if(addresses == null)
             {
                 return NotFound();
@@ -64,11 +58,12 @@ namespace Bank.API.Controllers
 
             try
             {
-                await _addressRepository.UpdateAsync(address);
+                await _addressService.UpdateAsync(id, address);
+                await _addressService.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _addressRepository.ExistsAsync(id))
+                if (!await _addressService.EntityExists(id))
                 {
                     return NotFound();
                 }
@@ -87,11 +82,13 @@ namespace Bank.API.Controllers
         public async Task<ActionResult<Address>> PostAddress(CreateAddressDTO addressDTO)
         {
             bool created = await _addressService.CreateAsync(addressDTO);
-            //var address = await _addressService.CreateAsync(addressDTO);
-            if (created == false)
+
+            if (!created)
             {
                 return Problem("There was a problem creating Address.");
             }
+
+            await _addressService.SaveAsync();
 
             return Ok("Address created successfully.");
         }
@@ -100,13 +97,14 @@ namespace Bank.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAddress(int id)
         {
-            var address = await _addressRepository.GetByIdAsync(id);
+            var address = await _addressService.GetAsync(id);
             if (address == null)
             {
                 return NotFound();
             }
 
-            await _addressRepository.RemoveAsync(address);
+            await _addressService.DeleteAsync(id);
+            await _addressService.SaveAsync();
 
             return NoContent();
         }

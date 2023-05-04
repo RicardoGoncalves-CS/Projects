@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Bank.API.Data;
 using Bank.API.Models;
 using Bank.API.Data.Repository;
 using Bank.API.Services;
@@ -18,10 +12,10 @@ namespace Bank.API.Controllers
     public class BranchesController : ControllerBase
     {
         private readonly IBankRepository<Branch> _branchRepository;
-        private readonly IBranchService _branchService;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IBankService<CreateBranchDTO, GetBranchDTO, UpdateBranchDTO> _branchService;
+        private readonly IBankRepository<Customer> _customerRepository;
 
-        public BranchesController(IBankRepository<Branch> branchRepository, IBranchService branchService, ICustomerRepository customerRepository)
+        public BranchesController(IBankRepository<Branch> branchRepository, IBankService<CreateBranchDTO, GetBranchDTO, UpdateBranchDTO> branchService, IBankRepository<Customer> customerRepository)
         {
             _branchRepository = branchRepository;
             _branchService = branchService;
@@ -32,49 +26,26 @@ namespace Bank.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetBranchDTO>>> GetBranches()
         {
-            var branches = await _branchRepository.GetAllAsync();
-            if (branches == null)
+            var branches = await _branchService.GetAllAsync();
+            if(branches == null)
             {
                 return NotFound();
             }
 
-            var branchDTOs = new List<GetBranchDTO>();
-
-            foreach(var branch in branches)
-            {
-                var branchDTO = new GetBranchDTO
-                {
-                    Id = branch.Id,
-                    BranchName = branch.BranchName,
-                    Address = branch.Address,
-                    CustomerIds = branch.Customers?.Select(c => c.Id).ToList()
-                };
-
-                branchDTOs.Add(branchDTO);
-            }
-
-            return Ok(branchDTOs);
+            return Ok(branches);
         }
 
         // GET: api/Branches/5
         [HttpGet("{id}")]
         public async Task<ActionResult<GetBranchDTO>> GetBranch(int id)
         {
-            var branch = await _branchService.GetBranchById(id);
+            var branch = await _branchService.GetAsync(id);
             if (branch == null)
             {
                 return NotFound();
             }
 
-            var branchDTO = new GetBranchDTO
-            {
-                Id = branch.Id,
-                BranchName = branch.BranchName,
-                Address = branch.Address,
-                CustomerIds = branch.CustomerIds
-            };
-
-            return Ok(branchDTO);
+            return Ok(branch);
         }
 
         // PUT: api/Branches/5
@@ -89,11 +60,12 @@ namespace Bank.API.Controllers
 
             try
             {
-                await _branchService.UpdateBranchAsync(id, branchDTO);
+                await _branchService.UpdateAsync(id, branchDTO);
+                await _branchService.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _branchRepository.ExistsAsync(id))
+                if (!await _branchService.EntityExists(id))
                 {
                     return NotFound();
                 }
@@ -105,7 +77,7 @@ namespace Bank.API.Controllers
 
             return NoContent();
         }
-
+        /*
         // PUT: api/Branches/Customer/5
         [HttpPut("Customer/{id}")]
         public async Task<IActionResult> PutBranchCustomer(int id, AddCustomerDTO addCustomerDTO)
@@ -128,28 +100,36 @@ namespace Bank.API.Controllers
 
             return Ok();
         }
-
+        */
         // POST: api/Branches
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Branch>> PostBranch(CreateBranchDTO branchDTO)
         {
-            var branch = await _branchService.CreateBranchAsync(branchDTO);
+            bool created = await _branchService.CreateAsync(branchDTO);
+            
+            if (!created)
+            {
+                return Problem("There was a problem creating Branch.");
+            }
 
-            return CreatedAtAction("GetBranch", new { id = branch.Id }, branch);
+            await _branchService.SaveAsync();
+
+            return Ok("Branch successfully created.");
         }
 
         // DELETE: api/Branches/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBranch(int id)
         {
-            var branch = await _branchRepository.GetByIdAsync(id);
+            var branch = await _branchService.GetAsync(id);
             if (branch == null)
             {
                 return NotFound();
             }
 
-            await _branchRepository.RemoveAsync(branch);
+            await _branchService.DeleteAsync(id);
+            await _branchService.SaveAsync();
 
             return NoContent();
         }

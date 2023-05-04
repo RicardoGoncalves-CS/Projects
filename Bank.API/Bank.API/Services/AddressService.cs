@@ -104,5 +104,10 @@ namespace Bank.API.Services
 
             return true;
         }
+
+        public async Task SaveAsync()
+        {
+            await _addressRepository.SaveAsync();
+        }
     }
 }

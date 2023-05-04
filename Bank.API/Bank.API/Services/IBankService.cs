@@ -8,5 +8,6 @@
         Task<IEnumerable<TRead>?> GetAllAsync();
         Task<TRead?> GetAsync(int id);
         Task<bool> EntityExists(int id);
+        Task SaveAsync();
     }
 }

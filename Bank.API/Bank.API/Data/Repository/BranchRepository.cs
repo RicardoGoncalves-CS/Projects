@@ -15,7 +15,6 @@ namespace Bank.API.Data.Repository
         public async Task AddAsync(Branch entity)
         {
             _context.Branches.Add(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsAsync(int id)
@@ -42,13 +41,11 @@ namespace Bank.API.Data.Repository
         public async Task RemoveAsync(Branch entity)
         {
             _context.Branches.Remove(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Branch entity)
         {
             _context.Branches.Update(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task SaveAsync()

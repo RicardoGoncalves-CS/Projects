@@ -16,7 +16,6 @@ namespace Bank.API.Data.Repository
         public async Task AddAsync(Address entity)
         {
             _context.Addresses.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Address>> GetAllAsync()
@@ -32,13 +31,11 @@ namespace Bank.API.Data.Repository
         public async Task RemoveAsync(Address entity)
         {
             _context.Addresses.Remove(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Address entity)
         {
             _context.Addresses.Update(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsAsync(int id)
