@@ -24,12 +24,19 @@ namespace Bank.API.Data.Repository
 
         public async Task<IEnumerable<Account>> GetAllAsync()
         {
-            return await _context.Accounts.ToListAsync();
+            return await _context.Accounts
+                .Include(a => a.Branch)
+                .Include(a => a.Customer)
+                .ToListAsync();
         }
 
         public async Task<Account> GetByIdAsync(int id)
         {
-            return await _context.Accounts.FindAsync(id);
+            return await _context.Accounts
+                .Where(a => a.Id == id)
+                .Include(a => a.Branch)
+                .Include(a => a.Customer)
+                .FirstOrDefaultAsync();
         }
 
         public async Task RemoveAsync(Account entity)
