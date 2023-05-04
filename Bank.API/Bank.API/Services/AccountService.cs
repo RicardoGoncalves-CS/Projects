@@ -92,19 +92,67 @@ namespace Bank.API.Services
             return accountDTOs;
         }
 
-        public Task<ReadAccountDTO?> GetAsync(int id)
+        public async Task<ReadAccountDTO?> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            if (_accountRepository == null)
+            {
+                return null;
+            }
+
+            var account = await _accountRepository.GetByIdAsync(id);
+            if (account == null)
+            {
+                return null;
+            }
+
+            var accountDTO = new ReadAccountDTO
+            {
+                Id = account.Id,
+                AccountNo = account.AccountNo,
+                Balance = account.Balance,
+                OpenDate = account.OpenDate,
+                IsActive = account.IsActive,
+                BranchId = account.Branch.Id,
+                CustomerId = account.Customer.Id
+            };
+
+            return accountDTO;
         }
 
-        public Task SaveAsync()
+        public async Task SaveAsync()
         {
-            throw new NotImplementedException();
+            await _accountRepository.SaveAsync();
         }
 
-        public Task<bool> UpdateAsync(int id, UpdateAccountDTO entity)
+        public async Task<bool> UpdateAsync(int id, UpdateAccountDTO entity)
         {
-            throw new NotImplementedException();
+            var account = await _accountRepository.GetByIdAsync(id);
+            if (account == null)
+            {
+                throw new ArgumentException($"Account with id {id} not found");
+            }
+
+            var branch = await _branchRepository.GetByIdAsync(entity.BranchId);
+            if (branch == null)
+            {
+                throw new ArgumentException($"Branch with id {entity.BranchId} not found");
+            }
+
+            var customer = await _customerRepository.GetByIdAsync(entity.CustomerId);
+            if(customer == null)
+            {
+                throw new ArgumentException($"Customer with id {entity.CustomerId} not found");
+            }
+
+            account.AccountNo = entity.AccountNo;
+            account.Balance = entity.Balance;
+            account.IsActive = entity.IsActive;
+            account.Branch = branch;
+            account.Customer = customer;
+
+            await _accountRepository.UpdateAsync(account);
+
+            return true;
         }
     }
 }
