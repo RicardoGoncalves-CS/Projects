@@ -4,7 +4,7 @@ using Bank.API.Models.DTOs.CustomerDTOs;
 
 namespace Bank.API.Services
 {
-    public class CustomerService : IBankService<CreateCustomerDTO, Customer, CreateCustomerDTO>
+    public class CustomerService : IBankService<CreateCustomerDTO, Customer, UpdateCustomerDTO>
     {
         private readonly IBankRepository<Customer> _customerRepository;
         private readonly IBankRepository<Address> _addressRepository;
@@ -91,7 +91,7 @@ namespace Bank.API.Services
             await _customerRepository.SaveAsync();
         }
 
-        public async Task<bool> UpdateAsync(int id, CreateCustomerDTO entity)
+        public async Task<bool> UpdateAsync(int id, UpdateCustomerDTO entity)
         {
             var customer = await _customerRepository.GetByIdAsync(id);
             if (customer == null)

@@ -13,17 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IBankRepository<Address>, AddressRepository>();
 builder.Services.AddScoped<IBankService<CreateAddressDTO, Address, Address>, AddressService>();
 
-//builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IBankRepository<Branch>, BranchRepository>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 
-//builder.Services.AddScoped<IBankRepository<Customer>, CustomerRepository>();
 builder.Services.AddScoped<IBankRepository<Customer>, CustomerRepository>();
-builder.Services.AddScoped<IBankService<CreateCustomerDTO, Customer, Customer>, CustomerService>();
+builder.Services.AddScoped<IBankService<CreateCustomerDTO, Customer, UpdateCustomerDTO>, CustomerService>();
 
 
 builder.Services.AddControllers();
