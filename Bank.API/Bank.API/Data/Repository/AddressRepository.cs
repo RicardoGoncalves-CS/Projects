@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bank.API.Data.Repository
 {
-    public class AddressRepository : IAddressRepository
+    public class AddressRepository : IBankRepository<Address>
     {
         private readonly DataContext _context;
 
@@ -44,6 +44,11 @@ namespace Bank.API.Data.Repository
         public async Task<bool> ExistsAsync(int id)
         {
             return await _context.Addresses.AnyAsync(a => a.Id == id);
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

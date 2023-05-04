@@ -6,10 +6,10 @@ namespace Bank.API.Services
 {
     public class BranchService : IBranchService
     {
-        private readonly IBranchRepository _branchRepository;
-        private readonly IAddressRepository _addressRepository;
+        private readonly IBankRepository<Branch> _branchRepository;
+        private readonly IBankRepository<Address> _addressRepository;
 
-        public BranchService(IBranchRepository branchRepository, IAddressRepository addressRepository)
+        public BranchService(IBankRepository<Branch> branchRepository, IBankRepository<Address> addressRepository)
         {
             _branchRepository = branchRepository;
             _addressRepository = addressRepository;

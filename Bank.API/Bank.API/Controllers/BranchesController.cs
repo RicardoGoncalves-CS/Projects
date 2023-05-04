@@ -17,11 +17,11 @@ namespace Bank.API.Controllers
     [ApiController]
     public class BranchesController : ControllerBase
     {
-        private readonly IBranchRepository _branchRepository;
+        private readonly IBankRepository<Branch> _branchRepository;
         private readonly IBranchService _branchService;
         private readonly ICustomerRepository _customerRepository;
 
-        public BranchesController(IBranchRepository branchRepository, IBranchService branchService, ICustomerRepository customerRepository)
+        public BranchesController(IBankRepository<Branch> branchRepository, IBranchService branchService, ICustomerRepository customerRepository)
         {
             _branchRepository = branchRepository;
             _branchService = branchService;

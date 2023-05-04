@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bank.API.Data.Repository
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository : IBankRepository<Customer>
     {
         private readonly DataContext _context;
 
@@ -43,6 +43,11 @@ namespace Bank.API.Data.Repository
         public async Task<bool> ExistsAsync(int id)
         {
             return await _context.Customers.AnyAsync(a => a.Id == id);
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

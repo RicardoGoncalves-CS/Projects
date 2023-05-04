@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bank.API.Data.Repository
 {
-    public class BranchRepository : IBranchRepository
+    public class BranchRepository : IBankRepository<Branch>
     {
         private readonly DataContext _context;
 

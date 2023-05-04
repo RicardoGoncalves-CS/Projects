@@ -17,10 +17,10 @@ namespace Bank.API.Controllers
     [ApiController]
     public class AddressesController : ControllerBase
     {
-        private readonly IAddressRepository _addressRepository;
+        private readonly IBankRepository<Address> _addressRepository;
         private readonly IAddressService _addressService;
 
-        public AddressesController(IAddressRepository addressRepository, IAddressService addressService)
+        public AddressesController(IBankRepository<Address> addressRepository, IAddressService addressService)
         {
             _addressRepository = addressRepository;
             _addressService = addressService;

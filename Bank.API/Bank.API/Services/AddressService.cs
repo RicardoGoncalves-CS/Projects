@@ -6,9 +6,9 @@ namespace Bank.API.Services
 {
     public class AddressService : IAddressService
     {
-        private readonly IAddressRepository _addressRepository;
+        private readonly IBankRepository<Address> _addressRepository;
 
-        public AddressService(IAddressRepository addressRepository)
+        public AddressService(IBankRepository<Address> addressRepository)
         {
             _addressRepository = addressRepository;
         }
