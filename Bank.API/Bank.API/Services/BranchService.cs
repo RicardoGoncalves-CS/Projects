@@ -56,7 +56,7 @@ namespace Bank.API.Services
             return (await _addressRepository.GetByIdAsync(id)) != null;
         }
 
-        public async Task<IEnumerable<GetBranchDTO>?> GetAllAsync()
+        public async Task<IEnumerable<ReadBranchDTO>?> GetAllAsync()
         {
             if (_branchRepository == null)
             {
@@ -65,11 +65,11 @@ namespace Bank.API.Services
 
             var entities = await _branchRepository.GetAllAsync();
 
-            var branchDTOs = new List<GetBranchDTO>();
+            var branchDTOs = new List<ReadBranchDTO>();
 
             foreach(var branch in entities)
             {
-                var branchDTO = new GetBranchDTO
+                var branchDTO = new ReadBranchDTO
                 {
                     Id = branch.Id,
                     BranchName = branch.BranchName,
@@ -83,7 +83,7 @@ namespace Bank.API.Services
             return branchDTOs;
         }
 
-        public async Task<GetBranchDTO?> GetAsync(int id)
+        public async Task<ReadBranchDTO?> GetAsync(int id)
         {
             if(_branchRepository == null)
             {
@@ -98,7 +98,7 @@ namespace Bank.API.Services
 
             var customerIds = branch.Customers?.Select(c => c.Id);
 
-            var branchDTO = new GetBranchDTO
+            var branchDTO = new ReadBranchDTO
             {
                 Id = branch.Id,
                 BranchName = branch.BranchName,

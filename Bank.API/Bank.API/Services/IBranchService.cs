@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Bank.API.Services
 {
-    public interface IBranchService : IBankService<CreateBranchDTO, GetBranchDTO, UpdateBranchDTO>
+    public interface IBranchService : IBankService<CreateBranchDTO, ReadBranchDTO, UpdateBranchDTO>
     {
         Task<bool> AddCustomerToBranchAsync(int branchId, int customerId);
     }

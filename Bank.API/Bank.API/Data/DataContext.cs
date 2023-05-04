@@ -16,5 +16,6 @@ namespace Bank.API.Data
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Account> Accounts { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Bank.API.Models.DTOs.BranchDTOs
 {
-    public class GetBranchDTO
+    public class ReadBranchDTO
     {
         public int Id { get; set; }
         public string BranchName { get; set; }

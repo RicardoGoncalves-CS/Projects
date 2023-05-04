@@ -8,5 +8,6 @@
         public string Phone { get; set; }
         public bool IsActive { get; set; }
         public Address Address { get; set; }
+        public ICollection<Account> Accounts { get; set; }
     }
 }

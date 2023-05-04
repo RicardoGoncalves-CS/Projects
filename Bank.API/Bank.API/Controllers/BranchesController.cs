@@ -24,7 +24,7 @@ namespace Bank.API.Controllers
 
         // GET: api/Branches
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetBranchDTO>>> GetBranches()
+        public async Task<ActionResult<IEnumerable<ReadBranchDTO>>> GetBranches()
         {
             var branches = await _branchService.GetAllAsync();
             if(branches == null)
@@ -37,7 +37,7 @@ namespace Bank.API.Controllers
 
         // GET: api/Branches/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetBranchDTO>> GetBranch(int id)
+        public async Task<ActionResult<ReadBranchDTO>> GetBranch(int id)
         {
             var branch = await _branchService.GetAsync(id);
             if (branch == null)
@@ -80,7 +80,7 @@ namespace Bank.API.Controllers
         
         // PUT: api/Branches/Customer/5
         [HttpPut("Customer/{id}")]
-        public async Task<IActionResult> PutBranchCustomer(int id, AddCustomerDTO addCustomerDTO)
+        public async Task<IActionResult> PutBranchCustomer(int id, AddCustomerBranchDTO addCustomerDTO)
         {
             if (id != addCustomerDTO.Id)
             {

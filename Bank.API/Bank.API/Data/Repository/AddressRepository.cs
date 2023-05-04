@@ -15,7 +15,7 @@ namespace Bank.API.Data.Repository
 
         public async Task AddAsync(Address entity)
         {
-            _context.Addresses.AddAsync(entity);
+            await _context.Addresses.AddAsync(entity);
         }
 
         public async Task<IEnumerable<Address>> GetAllAsync()
