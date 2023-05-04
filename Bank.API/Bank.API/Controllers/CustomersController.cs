@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Bank.API.Data;
 using Bank.API.Models;
+using Bank.API.Models.DTOs.CustomerDTOs;
 
 namespace Bank.API.Controllers
 {
@@ -84,12 +85,24 @@ namespace Bank.API.Controllers
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public async Task<ActionResult<Customer>> PostCustomer(CreateCustomerDTO customerDTO)
         {
-          if (_context.Customers == null)
-          {
-              return Problem("Entity set 'DataContext.Customers'  is null.");
-          }
+            if (_context.Customers == null)
+            {
+                return Problem("Entity set 'DataContext.Customers'  is null.");
+            }
+
+            var address = await _context.Addresses.FindAsync(customerDTO.AddressId);
+
+            var customer = new Customer
+            {
+                FirstName = customerDTO.FirstName,
+                LastName = customerDTO.LastName,
+                Phone = customerDTO.Phone,
+                IsActive = customerDTO.IsActive,
+                Address = address
+            };
+
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 

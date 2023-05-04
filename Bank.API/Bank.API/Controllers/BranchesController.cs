@@ -81,6 +81,20 @@ namespace Bank.API.Controllers
             return NoContent();
         }
 
+        // PUT: api/Branches/Customer/5
+        [HttpPut("Customer/{id}")]
+        public async Task<IActionResult> PutBranchCustomer(int id, AddCustomerDTO addCustomerDTO)
+        {
+            if (id != addCustomerDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            var branch = await _branchRepository.GetByIdAsync(id);
+            // Need Customer repository / service
+            //branch.Customers.Add()
+        }
+
         // POST: api/Branches
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
