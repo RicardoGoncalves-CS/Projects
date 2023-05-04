@@ -1,12 +1,10 @@
 ﻿using Bank.API.Models.DTOs.BranchDTOs;
-using Bank.API.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Bank.API.Services
 {
-    public interface IBranchService
+    public interface IBranchService : IBankService<CreateBranchDTO, GetBranchDTO, UpdateBranchDTO>
     {
-        Task<GetBranchDTO> GetBranchById(int id);
-        Task<Branch> CreateBranchAsync(CreateBranchDTO branchDTO);
-        Task UpdateBranchAsync(int id, UpdateBranchDTO branchDTO);
+        Task<bool> AddCustomerToBranchAsync(int branchId, int customerId);
     }
 }

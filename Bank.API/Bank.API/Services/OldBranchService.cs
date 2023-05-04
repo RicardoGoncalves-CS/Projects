@@ -4,7 +4,7 @@ using Bank.API.Models.DTOs.BranchDTOs;
 
 namespace Bank.API.Services
 {
-    public class OldBranchService : IBranchService
+    public class OldBranchService : oldIBranchService
     {
         private readonly IBankRepository<Branch> _branchRepository;
         private readonly IBankRepository<Address> _addressRepository;

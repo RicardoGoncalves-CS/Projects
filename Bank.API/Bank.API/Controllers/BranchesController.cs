@@ -12,10 +12,10 @@ namespace Bank.API.Controllers
     public class BranchesController : ControllerBase
     {
         private readonly IBankRepository<Branch> _branchRepository;
-        private readonly IBankService<CreateBranchDTO, GetBranchDTO, UpdateBranchDTO> _branchService;
+        private readonly IBranchService _branchService;
         private readonly IBankRepository<Customer> _customerRepository;
 
-        public BranchesController(IBankRepository<Branch> branchRepository, IBankService<CreateBranchDTO, GetBranchDTO, UpdateBranchDTO> branchService, IBankRepository<Customer> customerRepository)
+        public BranchesController(IBankRepository<Branch> branchRepository, IBranchService branchService, IBankRepository<Customer> customerRepository)
         {
             _branchRepository = branchRepository;
             _branchService = branchService;
@@ -77,7 +77,7 @@ namespace Bank.API.Controllers
 
             return NoContent();
         }
-        /*
+        
         // PUT: api/Branches/Customer/5
         [HttpPut("Customer/{id}")]
         public async Task<IActionResult> PutBranchCustomer(int id, AddCustomerDTO addCustomerDTO)
@@ -87,20 +87,18 @@ namespace Bank.API.Controllers
                 return BadRequest();
             }
 
-            var branch = await _branchRepository.GetByIdAsync(id);
-            var customer = await _customerRepository.GetByIdAsync(addCustomerDTO.CustomerId);
-
-            if(branch.Customers == null)
+            var added = await _branchService.AddCustomerToBranchAsync(id, addCustomerDTO.CustomerId);
+            if (!added)
             {
-                branch.Customers = new List<Customer>();
+                return Problem($"There was a problem adding Customer with Id {addCustomerDTO.CustomerId} to Branch with Id {id}.");
             }
 
-            branch.Customers.Add(customer);
-            await _branchRepository.SaveAsync();
+
+            await _branchService.SaveAsync();
 
             return Ok();
         }
-        */
+        
         // POST: api/Branches
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

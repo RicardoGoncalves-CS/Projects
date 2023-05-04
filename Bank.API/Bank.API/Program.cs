@@ -18,7 +18,7 @@ builder.Services.AddScoped<IBankService<CreateAddressDTO, Address, Address>, Add
 
 //builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IBankRepository<Branch>, BranchRepository>();
-builder.Services.AddScoped<IBankService<CreateBranchDTO, GetBranchDTO, UpdateBranchDTO>, BranchService>();
+builder.Services.AddScoped<IBranchService, BranchService>();
 
 builder.Services.AddScoped<IBankRepository<Customer>, CustomerRepository>();
 
