@@ -4,7 +4,7 @@ using Bank.API.Models.DTOs.AddressDTOs;
 
 namespace Bank.API.Services
 {
-    public class OldAddressService : IAddressService
+    public class OldAddressService : oldIAddressService
     {
         private readonly IBankRepository<Address> _addressRepository;
 

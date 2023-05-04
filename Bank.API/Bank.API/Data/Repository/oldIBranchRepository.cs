@@ -2,7 +2,7 @@
 
 namespace Bank.API.Data.Repository
 {
-    public interface IBranchRepository
+    public interface oldIBranchRepository
     {
         Task AddAsync(Branch entity);
         Task<IEnumerable<Branch>> GetAllAsync();

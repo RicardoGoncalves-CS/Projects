@@ -3,6 +3,7 @@ using Bank.API.Data.Repository;
 using Bank.API.Models;
 using Bank.API.Models.DTOs.AddressDTOs;
 using Bank.API.Models.DTOs.BranchDTOs;
+using Bank.API.Models.DTOs.CustomerDTOs;
 using Bank.API.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,9 @@ builder.Services.AddScoped<IBankService<CreateAddressDTO, Address, Address>, Add
 builder.Services.AddScoped<IBankRepository<Branch>, BranchRepository>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 
+//builder.Services.AddScoped<IBankRepository<Customer>, CustomerRepository>();
 builder.Services.AddScoped<IBankRepository<Customer>, CustomerRepository>();
+builder.Services.AddScoped<IBankService<CreateCustomerDTO, Customer, Customer>, CustomerService>();
 
 
 builder.Services.AddControllers();

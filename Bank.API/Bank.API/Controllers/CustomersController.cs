@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bank.API.Data;
 using Bank.API.Models;
 using Bank.API.Models.DTOs.CustomerDTOs;
+using Bank.API.Services;
 
 namespace Bank.API.Controllers
 {
@@ -16,10 +17,12 @@ namespace Bank.API.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IBankService<CreateCustomerDTO, Customer, Customer> _customerService;
 
-        public CustomersController(DataContext context)
+        public CustomersController(DataContext context, IBankService<CreateCustomerDTO, Customer, Customer> customerService)
         {
             _context = context;
+            _customerService = customerService;
         }
 
         // GET: api/Customers
@@ -87,6 +90,7 @@ namespace Bank.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(CreateCustomerDTO customerDTO)
         {
+            /*
             if (_context.Customers == null)
             {
                 return Problem("Entity set 'DataContext.Customers'  is null.");
@@ -107,6 +111,18 @@ namespace Bank.API.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+            */
+
+            bool created = await _customerService.CreateAsync(customerDTO);
+
+            if (!created)
+            {
+                return Problem("There was a problem creating Branch.");
+            }
+
+            await _customerService.SaveAsync();
+
+            return Ok("Customer successfully created.");
         }
 
         // DELETE: api/Customers/5

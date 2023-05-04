@@ -44,7 +44,7 @@ namespace Bank.API.Services
                 return false;
             }
 
-            _addressRepository.RemoveAsync(entity);
+            await _addressRepository.RemoveAsync(entity);
 
             return true;
         }

@@ -2,7 +2,7 @@
 
 namespace Bank.API.Data.Repository
 {
-    public interface ICustomerRepository
+    public interface oldICustomerRepository
     {
         Task<Customer> GetByIdAsync(int id);
         Task<IEnumerable<Customer>> GetAllAsync();

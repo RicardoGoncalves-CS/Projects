@@ -15,29 +15,31 @@ namespace Bank.API.Data.Repository
         public async Task AddAsync(Customer entity)
         {
             _context.Customers.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Customer>> GetAllAsync()
         {
-            return await _context.Customers.ToListAsync();
+            return await _context.Customers
+                .Include(c => c.Address)
+                .ToListAsync();
         }
 
         public async Task<Customer> GetByIdAsync(int id)
         {
-            return await _context.Customers.FindAsync(id);
+            return await _context.Customers
+                .Where(c => c.Id == id)
+                .Include(c => c.Address)
+                .FirstOrDefaultAsync();
         }
 
         public async Task RemoveAsync(Customer entity)
         {
             _context.Customers.Remove(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Customer entity)
         {
             _context.Customers.Update(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsAsync(int id)
