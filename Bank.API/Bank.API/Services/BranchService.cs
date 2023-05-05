@@ -74,7 +74,8 @@ namespace Bank.API.Services
                     Id = branch.Id,
                     BranchName = branch.BranchName,
                     Address = branch.Address,
-                    CustomerIds = branch.Customers?.Select(c => c.Id)
+                    CustomerIds = branch.Customers?.Select(c => c.Id),
+                    AccountIds = branch.Accounts?.Select(a => a.Id)
                 };
 
                 branchDTOs.Add(branchDTO);
@@ -97,13 +98,15 @@ namespace Bank.API.Services
             }
 
             var customerIds = branch.Customers?.Select(c => c.Id);
+            var accountIds = branch.Accounts?.Select(a => a.Id);
 
             var branchDTO = new ReadBranchDTO
             {
                 Id = branch.Id,
                 BranchName = branch.BranchName,
                 Address = branch.Address,
-                CustomerIds = customerIds
+                CustomerIds = customerIds,
+                AccountIds = accountIds
             };
 
             return branchDTO;

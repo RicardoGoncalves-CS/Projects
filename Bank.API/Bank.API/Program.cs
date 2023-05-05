@@ -14,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(opt => opt.SerializerSettings
+    .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 builder.Services.AddScoped<IBankRepository<Address>, AddressRepository>();
 builder.Services.AddScoped<IBankService<CreateAddressDTO, Address, Address>, AddressService>();
 

@@ -6,5 +6,6 @@
         public string BranchName { get; set; }
         public Address Address { get; set; }
         public IEnumerable<int>? CustomerIds { get; set; }
+        public IEnumerable<int>? AccountIds { get; set; }
     }
 }

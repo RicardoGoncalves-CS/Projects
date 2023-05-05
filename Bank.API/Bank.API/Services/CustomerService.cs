@@ -1,6 +1,7 @@
 ﻿using Bank.API.Data.Repository;
 using Bank.API.Models;
 using Bank.API.Models.DTOs.CustomerDTOs;
+using System.Net;
 
 namespace Bank.API.Services
 {
@@ -8,16 +9,19 @@ namespace Bank.API.Services
     {
         private readonly IBankRepository<Customer> _customerRepository;
         private readonly IBankRepository<Address> _addressRepository;
+        private readonly IBankRepository<Account> _accountRepository;
 
-        public CustomerService(IBankRepository<Customer> customerRepository, IBankRepository<Address> addressRepository)
+        public CustomerService(IBankRepository<Customer> customerRepository, IBankRepository<Address> addressRepository, IBankRepository<Account> accountRepository)
         {
             _customerRepository = customerRepository;
             _addressRepository = addressRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<bool> CreateAsync(CreateCustomerDTO entity)
         {
             var address = await _addressRepository.GetByIdAsync(entity.AddressId);
+            var accounts = await _accountRepository.GetAllAsync();
 
             var customer = new Customer
             {
@@ -25,7 +29,8 @@ namespace Bank.API.Services
                 LastName = entity.LastName,
                 Phone = entity.Phone,
                 IsActive = entity.IsActive,
-                Address = address
+                Address = address,
+                Accounts = accounts.Where(a => entity.AccountIds.Contains(a.Id)).ToList()
             };
 
             await _customerRepository.AddAsync(customer);
@@ -105,10 +110,14 @@ namespace Bank.API.Services
                 customer.Address = address;
             }
 
+            var accounts = await _accountRepository.GetAllAsync();
+            var Accounts = accounts.Where(a => entity.AccountIds.Contains(a.Id)).ToList();
+
             customer.FirstName = entity.FirstName;
             customer.LastName = entity.LastName;
             customer.Phone = entity.Phone;
             customer.IsActive = entity.IsActive;
+            customer.Accounts = Accounts;
 
             await _customerRepository.UpdateAsync(customer);
 

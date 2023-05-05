@@ -6,5 +6,6 @@
         public string BranchName { get; set; }
         public int AddressId { get; set; }
         public List<int>? CustomerIds { get; set; }
+        public List<int>? AccountIds { get; set; }
     }
 }

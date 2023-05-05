@@ -21,6 +21,7 @@ namespace Bank.API.Data.Repository
         {
             return await _context.Customers
                 .Include(c => c.Address)
+                .Include(c => c.Accounts)
                 .ToListAsync();
         }
 
@@ -29,6 +30,7 @@ namespace Bank.API.Data.Repository
             return await _context.Customers
                 .Where(c => c.Id == id)
                 .Include(c => c.Address)
+                .Include(c => c.Accounts)
                 .FirstOrDefaultAsync();
         }
 

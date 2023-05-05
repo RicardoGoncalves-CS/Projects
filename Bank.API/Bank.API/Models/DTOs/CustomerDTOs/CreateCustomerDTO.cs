@@ -7,5 +7,6 @@
         public string Phone { get; set; }
         public bool IsActive { get; set; }
         public int AddressId { get; set; }
+        public IEnumerable<int>? AccountIds { get; set; }
     }
 }
