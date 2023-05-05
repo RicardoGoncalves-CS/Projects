@@ -11,12 +11,10 @@ namespace Bank.API.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IBankService<CreateCustomerDTO, Customer, UpdateCustomerDTO> _customerService;
 
         public CustomersController(DataContext context, IBankService<CreateCustomerDTO, Customer, UpdateCustomerDTO> customerService)
         {
-            _context = context;
             _customerService = customerService;
         }
 
@@ -85,7 +83,7 @@ namespace Bank.API.Controllers
 
             if (!created)
             {
-                return Problem("There was a problem creating Branch.");
+                return Problem("There was a problem creating Customer.");
             }
 
             await _customerService.SaveAsync();
