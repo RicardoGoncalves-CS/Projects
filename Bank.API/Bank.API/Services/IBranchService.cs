@@ -6,5 +6,6 @@ namespace Bank.API.Services
     public interface IBranchService : IBankService<CreateBranchDTO, ReadBranchDTO, UpdateBranchDTO>
     {
         Task<bool> AddCustomerToBranchAsync(int branchId, int customerId);
+        Task<bool> AddAccountToBranchAsync(int branchId, int accountId);
     }
 }

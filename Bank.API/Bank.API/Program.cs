@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Handling circular references
 builder.Services.AddControllers()
     .AddNewtonsoftJson(opt => opt.SerializerSettings
     .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

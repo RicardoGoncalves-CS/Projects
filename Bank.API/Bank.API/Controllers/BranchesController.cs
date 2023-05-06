@@ -98,7 +98,27 @@ namespace Bank.API.Controllers
 
             return Ok();
         }
-        
+
+        // PUT: api/Branches/Customer/5
+        [HttpPut("Account/{id}")]
+        public async Task<IActionResult> PutBranchAccount(int id, AddCustomerBranchDTO addCustomerDTO)
+        {
+            if (id != addCustomerDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            var added = await _branchService.AddAccountToBranchAsync(id, addCustomerDTO.CustomerId);
+            if (!added)
+            {
+                return Problem($"There was a problem adding Account with Id {addCustomerDTO.CustomerId} to Branch with Id {id}.");
+            }
+
+            await _branchService.SaveAsync();
+
+            return Ok();
+        }
+
         // POST: api/Branches
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

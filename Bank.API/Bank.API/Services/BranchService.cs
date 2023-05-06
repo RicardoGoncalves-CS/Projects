@@ -9,12 +9,18 @@ namespace Bank.API.Services
         private readonly IBankRepository<Branch> _branchRepository;
         private readonly IBankRepository<Address> _addressRepository;
         private readonly IBankRepository<Customer> _customerRepository;
+        private readonly IBankRepository<Account> _accountRepository;
 
-        public BranchService(IBankRepository<Branch> branchRepository, IBankRepository<Address> addressRepository, IBankRepository<Customer> customerRepository)
+        public BranchService(
+            IBankRepository<Branch> branchRepository, 
+            IBankRepository<Address> addressRepository, 
+            IBankRepository<Customer> customerRepository, 
+            IBankRepository<Account> accountRepository)
         {
             _branchRepository = branchRepository;
             _addressRepository = addressRepository;
             _customerRepository = customerRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<bool> CreateAsync(CreateBranchDTO entity)
@@ -158,6 +164,30 @@ namespace Bank.API.Services
             }
 
             branch.Customers.Add(customer);
+
+            return true;
+        }
+
+        public async Task<bool> AddAccountToBranchAsync(int branchId, int accountId)
+        {
+            var branch = await _branchRepository.GetByIdAsync(branchId);
+            if (branch == null)
+            {
+                return false;
+            }
+
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null)
+            {
+                return false;
+            }
+
+            if (branch.Customers == null)
+            {
+                branch.Customers = new List<Customer>();
+            }
+
+            branch.Accounts.Add(account);
 
             return true;
         }
