@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BankWebAPI.Data;
-using BankWebAPI.Models;
-using BankWebAPI.Models.DTOs;
+using Bank.WebAPI.Data;
+using Bank.WebAPI.Models;
+using Bank.WebAPI.Models.DTOs;
 
-namespace BankWebAPI.Controllers;
+namespace Bank.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -49,12 +49,26 @@ public class CustomersController : ControllerBase
     // PUT: api/Customers/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutCustomer(int id, Customer customer)
+    public async Task<IActionResult> PutCustomer(int id, CustomerDTO customerDTO)
     {
-        if (id != customer.Id)
+        //if (id != customer.Id)
+        //{
+        //    return BadRequest();
+        //}
+
+        var customer = await _context.Customers.FindAsync(id);
+        if(customer == null)
         {
             return BadRequest();
         }
+
+        customer.FirstName = customerDTO.FirstName;
+        customer.LastName = customerDTO.LastName;
+        customer.Phone = customerDTO.Phone;
+        customer.IsActive = customerDTO.IsActive;
+        customer.AddressId = customerDTO.AddressId;
+        customer.Address = await _context.Addresses.FindAsync(customerDTO.AddressId);
+
 
         _context.Entry(customer).State = EntityState.Modified;
 
@@ -94,20 +108,8 @@ public class CustomersController : ControllerBase
             Phone = customerDTO.Phone,
             IsActive = customerDTO.IsActive,
             AddressId = customerDTO.AddressId,
-            Address = await _context.Addresses.FindAsync(customerDTO.AddressId),
+            Address = await _context.Addresses.FindAsync(customerDTO.AddressId)
         };
-
-        //foreach (var accountId in customerDTO.AccountIds)
-        //{
-        //    var account = await _context.Accounts.FindAsync(accountId);
-
-        //    if (accountId == 0)
-        //    {
-        //        return Problem($"Account with ID {customerDTO.AccountIds} not found.");
-        //    }
-
-        //    customer.Accounts.Add(account);
-        //}
 
         _context.Customers.Add(customer);
         await _context.SaveChangesAsync();

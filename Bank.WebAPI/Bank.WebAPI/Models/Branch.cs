@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
-namespace BankWebAPI.Models;
+namespace Bank.WebAPI.Models;
 
 public class Branch
 {
@@ -15,6 +15,5 @@ public class Branch
     [NotMapped]
     public IEnumerable<int> AccountIds { get; set; }
 
-    [JsonIgnore]
     public ICollection<Account> Accounts { get; set; }
 }

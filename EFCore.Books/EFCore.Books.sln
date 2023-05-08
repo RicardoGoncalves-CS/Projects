@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework", "EFCore.Books\EntityFramework.csproj", "{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dsad", "BookLibrary\dsad.csproj", "{01702C74-B168-40D1-8CC1-D74A0B445C20}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD5937BA-8ABF-4781-B019-B9EE12D25105}
+	EndGlobalSection
+EndGlobal

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BankWebAPI.Data;
-using BankWebAPI.Models;
-using BankWebAPI.Models.DTOs;
+using Bank.WebAPI.Data;
+using Bank.WebAPI.Models;
+using Bank.WebAPI.Models.DTOs;
 
-namespace BankWebAPI.Controllers;
+namespace Bank.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -19,53 +19,29 @@ public class BranchesController : ControllerBase
 
     // GET: api/Branches
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<BranchDTO>>> GetBranches()
+    public async Task<ActionResult<IEnumerable<Branch>>> GetBranches()
     {
-        if (_context.Branches == null)
-        {
-            return NotFound();
-        }
-
-        var branches = await _context.Branches.ToListAsync();
-        var branchDTOs = new List<BranchDTO>();
-
-        foreach(var branch in branches)
-        {
-            var branchDTO = new BranchDTO
-            {
-                BranchName = branch.BranchName,
-                AddressId = branch.AddressId,
-                AccountIds = branch.Accounts?.Select(a => a.Id).ToList()
-            };
-
-            branchDTOs.Add(branchDTO);
-        }
-
-        return branchDTOs;
+      if (_context.Branches == null)
+      {
+          return NotFound();
+      }
+        return await _context.Branches.Include(b => b.Accounts).ToListAsync();
     }
 
     // GET: api/Branches/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Branch>> GetBranch(int id)
     {
-        if (_context.Branches == null)
-        {
-            return NotFound();
-        }
-
+      if (_context.Branches == null)
+      {
+          return NotFound();
+      }
         var branch = await _context.Branches.FindAsync(id);
 
         if (branch == null)
         {
             return NotFound();
         }
-
-        var branchDTO = new BranchDTO
-        {
-            BranchName = branch.BranchName,
-            AddressId = branch.AddressId,
-            AccountIds = branch.Accounts?.Select(a => a.Id).ToList()
-        };
 
         return branch;
     }
@@ -75,33 +51,41 @@ public class BranchesController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> PutBranch(int id, BranchDTO branchDTO)
     {
-        var branch = await _context.Branches.FindAsync(id);
-
-        if(branch == null)
-        {
-            return BadRequest($"Branch with ID {id} was not found.");
-        }
-
         //if (id != branch.Id)
         //{
         //    return BadRequest();
         //}
 
-        branch.BranchName = branchDTO.BranchName;
-        branch.AddressId = branchDTO.AddressId;
-        branch.Address = await _context.Addresses.FindAsync(branchDTO.AddressId);
-        
+        var branch = await _context.Branches.FindAsync(id);
+        if(branch == null)
+        {
+            return Problem($"Branch with ID {id} was not found.");
+        }
+
+        var address = await _context.Addresses.FindAsync(branchDTO.AddressId);
+        if (address == null)
+        {
+            return Problem($"Address with ID {branchDTO.AddressId} was not found.");
+        }
+
+        var accounts = new List<Account>();
+
         foreach(var accountId in branchDTO.AccountIds)
         {
             var account = await _context.Accounts.FindAsync(accountId);
-
-            if (accountId == null)
+            if(account == null)
             {
-                return Problem($"Account with ID {branchDTO.AccountIds} not found.");
+                return Problem($"Account with ID {accountId} was not found.");
             }
 
-            branch.Accounts.Add(account);
+            accounts.Add(account);
         }
+
+        branch.BranchName = branchDTO.BranchName;
+        branch.AddressId = branchDTO.AddressId;
+        branch.Address = address;
+        branch.AccountIds = branchDTO.AccountIds;
+        branch.Accounts = accounts;
 
         _context.Entry(branch).State = EntityState.Modified;
 
@@ -131,21 +115,21 @@ public class BranchesController : ControllerBase
     {
         if (_context.Branches == null)
         {
-            return Problem("Entity set 'DataContext.Branches' is null.");
+            return Problem("Entity set 'DataContext.Branches'  is null.");
         }
 
-        Branch branch = new Branch
+        var branch = new Branch
         {
             BranchName = branchDTO.BranchName,
             AddressId = branchDTO.AddressId,
-            Address = await _context.Addresses.FindAsync(branchDTO.AddressId),
+            Address = await _context.Addresses.FindAsync(branchDTO.AddressId)
         };
 
         foreach (var accountId in branchDTO.AccountIds)
         {
             var account = await _context.Accounts.FindAsync(accountId);
 
-            if(accountId == 0)
+            if (accountId == 0)
             {
                 return Problem($"Account with ID {branchDTO.AccountIds} not found.");
             }

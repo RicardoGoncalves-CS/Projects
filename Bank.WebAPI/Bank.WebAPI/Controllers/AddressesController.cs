@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BankWebAPI.Data;
-using BankWebAPI.Models;
-using BankWebAPI.Models.DTOs;
+using Bank.WebAPI.Data;
+using Bank.WebAPI.Models;
+using Bank.WebAPI.Models.DTOs;
 
-namespace BankWebAPI.Controllers;
+namespace Bank.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -84,10 +84,10 @@ public class AddressesController : ControllerBase
     {
         if (_context.Addresses == null)
         {
-            return Problem("Entity set 'DataContext.Addresses' is null.");
+            return Problem("Entity set 'DataContext.Addresses'  is null.");
         }
 
-        Address address = new Address
+        var address = new Address
         {
             No = addressDTO.No,
             Street = addressDTO.Street,
@@ -95,7 +95,7 @@ public class AddressesController : ControllerBase
             PostCode = addressDTO.PostCode,
             Country = addressDTO.Country
         };
-        
+
         _context.Addresses.Add(address);
         await _context.SaveChangesAsync();
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BankWebAPI.Data;
-using BankWebAPI.Models;
-using BankWebAPI.Models.DTOs;
+using Bank.WebAPI.Data;
+using Bank.WebAPI.Models;
+using Bank.WebAPI.Models.DTOs;
 
-namespace BankWebAPI.Controllers;
+namespace Bank.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -49,12 +49,31 @@ public class AccountsController : ControllerBase
     // PUT: api/Accounts/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutAccount(int id, Account account)
+    public async Task<IActionResult> PutAccount(int id, AccountDTO accountDTO)
     {
-        if (id != account.Id)
+        //if (id != account.Id)
+        //{
+        //    return BadRequest();
+        //}
+
+        var account = await _context.Accounts.FindAsync(id);
+        if (account == null)
         {
-            return BadRequest();
+            return Problem($"Account with ID {id} was not found.");
         }
+
+        var customer = await _context.Customers.FindAsync(accountDTO.CustomerId);
+        if(customer == null)
+        {
+            return Problem($"Customer with ID {accountDTO.CustomerId} was not found.");
+        }
+
+        account.AccountNo = accountDTO.AccountNo;
+        account.Balance = accountDTO.Balance;
+        account.IsActive = accountDTO.IsActive;
+        account.CustomerId = accountDTO.CustomerId;
+        account.Customer = customer;
+        account.BranchId = accountDTO.BranchId;
 
         _context.Entry(account).State = EntityState.Modified;
 
@@ -95,8 +114,7 @@ public class AccountsController : ControllerBase
             IsActive = accountDTO.IsActive,
             CustomerId = accountDTO.CustomerId,
             Customer = await _context.Customers.FindAsync(accountDTO.CustomerId),
-            BranchId = accountDTO.BranchId,
-            Branch = await _context.Branches.FindAsync(accountDTO.BranchId)
+            BranchId = accountDTO.BranchId
         };
 
         _context.Accounts.Add(account);

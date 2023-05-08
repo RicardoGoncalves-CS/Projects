@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BankWebAPI.Models;
+namespace Bank.WebAPI.Models;
 
 public class Customer
 {
@@ -13,9 +13,4 @@ public class Customer
 
     [ForeignKey("AddressId")]
     public Address Address { get; set; }
-
-    //[NotMapped]
-    //public IEnumerable<int> AccountIds { get; set; }
-
-    //public ICollection<Account> Accounts { get; set; }
 }
