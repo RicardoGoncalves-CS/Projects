@@ -16,14 +16,22 @@ db.Database.EnsureCreated();
 //db.Authors.AddRange(authors);
 //db.SaveChanges();
 
-foreach (var author in db.Authors.Include(a => a.Books))
+var recentBooks = db.Books.Where(b => b.YearOfPublication > 1900);
+
+foreach (var book in recentBooks.Include(b => b.Author))
 {
-    Console.WriteLine($"{author} wrote:");
-
-    foreach (var book in author.Books)
-    {
-        Console.WriteLine(book);
-    }
-
-    Console.WriteLine();
+    Console.WriteLine($"{book} was written by {book.Author}");
 }
+
+// >> A different query
+//foreach (var author in db.Authors.Include(a => a.Books))
+//{
+//    Console.WriteLine($"{author} wrote:");
+
+//    foreach (var book in author.Books)
+//    {
+//        Console.WriteLine(book);
+//    }
+
+//    Console.WriteLine();
+//}
