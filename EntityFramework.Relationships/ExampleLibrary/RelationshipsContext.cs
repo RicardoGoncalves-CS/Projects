@@ -18,13 +18,21 @@ public class RelationshipsContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
-
+    public DbSet<Post> Posts { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Configuring 1:1 relationship between Users and UserProfiles
         modelBuilder.Entity<User>()
             .HasOne(u => u.Profile)
             .WithOne(p => p.User)
             .HasForeignKey<UserProfile>(p => p.UserProfileId)
             .IsRequired();
+
+        // Configuring 1:N relationship between Users and Posts
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Posts)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UserId);
     }
 }

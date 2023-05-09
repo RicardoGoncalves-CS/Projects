@@ -10,10 +10,22 @@ namespace EntityFramework.Relationships
             {
                 new User
                 {
-                    UserName = "James", Profile = new UserProfile
+                    UserName = "James", 
+                    Profile = new UserProfile
                     {
                         FullName = "James Taylor",
                         Age = 27
+                    },
+                    Posts = new List<Post>
+                    {
+                        new Post
+                        {
+                            Title = "Example Post"
+                        },
+                        new Post
+                        {
+                            Title = "Another Post"
+                        }
                     }
                 },
                 new User

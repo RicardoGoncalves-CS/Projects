@@ -10,12 +10,35 @@ using var db = new RelationshipsContext(options);
 
 db.Database.EnsureCreated();
 
-// >> Creating and saving dummy data
+if (db.Users.Any())
+{
+    db.Users.RemoveRange(db.Users);
+
+    if(db.UserProfiles.Any())
+        db.UserProfiles.RemoveRange(db.UserProfiles);
+
+    if (db.Posts.Any())
+        db.Posts.RemoveRange(db.Posts);
+}
+
+// >> To create and save dummy data
 var users = SeedData.Create();
 db.Users.AddRange(users);
 db.SaveChanges();
 
-foreach(var user in db.Users.Include(u => u.Profile))
+foreach (var user in db.Users.Include(u => u.Profile))
 {
     Console.WriteLine($"{user.UserName} is {user.Profile.Age} and the full name is {user.Profile.FullName}");
+    
+    if (user.Posts != null)
+    {
+        Console.WriteLine("Posts:");
+        
+        foreach (var post in user.Posts)
+        {
+            Console.WriteLine(post.Title);
+        }
+    }
+
+    Console.WriteLine();
 }
