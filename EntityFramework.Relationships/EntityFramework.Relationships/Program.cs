@@ -10,6 +10,7 @@ using var db = new RelationshipsContext(options);
 
 db.Database.EnsureCreated();
 
+// >> Removes any data stored in the database
 if (db.Users.Any())
 {
     db.Users.RemoveRange(db.Users);
@@ -18,7 +19,7 @@ if (db.Users.Any())
     db.Tags.RemoveRange(db.Tags);
 }
 
-// >> To create and save dummy data
+// >> Populates the database with dummy data
 var users = SeedData.Create();
 db.Users.AddRange(users);
 db.SaveChanges();
