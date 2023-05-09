@@ -6,7 +6,6 @@ namespace BookLibrary
     {
         public BooksContext(DbContextOptions<BooksContext> options) : base(options)
         {
-
         }
 
         public DbSet<Author> Authors { get; set; }

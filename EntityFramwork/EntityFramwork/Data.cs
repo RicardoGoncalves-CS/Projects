@@ -14,7 +14,7 @@ internal class Data
                 {
                     new Book {Title = "Emma", YearOfPublication = 1815},
                     new Book {Title = "Persuasion", YearOfPublication = 1818},
-                    new Book {Title = "Mansfield Park", YearOfPublication = 1814},
+                    new Book {Title = "Mansfield Park", YearOfPublication = 1814}
                 }
             },
             new Author

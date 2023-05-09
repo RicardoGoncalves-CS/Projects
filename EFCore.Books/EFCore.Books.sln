@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework", "EFCore.Books\EntityFramework.csproj", "{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dsad", "BookLibrary\dsad.csproj", "{01702C74-B168-40D1-8CC1-D74A0B445C20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLibrary", "BookLibrary\BookLibrary.csproj", "{C439ABE6-3C20-44C6-92F4-941B6683815C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{917FC474-B4DD-4BE5-AA08-4D437F0E9AF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01702C74-B168-40D1-8CC1-D74A0B445C20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C439ABE6-3C20-44C6-92F4-941B6683815C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C439ABE6-3C20-44C6-92F4-941B6683815C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C439ABE6-3C20-44C6-92F4-941B6683815C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C439ABE6-3C20-44C6-92F4-941B6683815C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

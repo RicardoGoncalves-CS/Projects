@@ -21,10 +21,10 @@ public class BranchesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Branch>>> GetBranches()
     {
-      if (_context.Branches == null)
-      {
-          return NotFound();
-      }
+        if (_context.Branches == null)
+        {
+            return NotFound();
+        }
         return await _context.Branches.Include(b => b.Accounts).ToListAsync();
     }
 
